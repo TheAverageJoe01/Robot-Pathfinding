@@ -1,0 +1,3 @@
+[console_scripts]
+moving = testing.test:main
+

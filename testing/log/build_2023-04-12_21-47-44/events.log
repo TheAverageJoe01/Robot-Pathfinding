@@ -1,0 +1,55 @@
+[0.000000] (-) TimerEvent: {}
+[0.000675] (testing) JobQueued: {'identifier': 'testing', 'dependencies': OrderedDict()}
+[0.000748] (testing) JobStarted: {'identifier': 'testing'}
+[0.099318] (-) TimerEvent: {}
+[0.199826] (-) TimerEvent: {}
+[0.300316] (-) TimerEvent: {}
+[0.400803] (-) TimerEvent: {}
+[0.501249] (-) TimerEvent: {}
+[0.601653] (-) TimerEvent: {}
+[0.702117] (-) TimerEvent: {}
+[0.748869] (testing) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', 'build/testing', 'build', '--build-base', '/home/kasm-user/Desktop/source/testing/build/testing/build', 'install', '--record', '/home/kasm-user/Desktop/source/testing/build/testing/install.log', '--single-version-externally-managed'], 'cwd': '/home/kasm-user/Desktop/source/testing', 'env': {'LANGUAGE': 'en_US:en', 'HOSTNAME': 'ee2139ac9fa7', 'SSH_AGENT_PID': '287', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/i386-linux-gnu:/opt/libjpeg-turbo/lib64/:/usr/local/lib/:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins::/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:', 'OMP_WAIT_POLICY': 'PASSIVE', 'HOME': '/home/kasm-user', 'NO_VNC_PORT': '6901', 'OLDPWD': '/home/kasm-user/Desktop/source', 'DESKTOP_SESSION': 'xfce', 'STARTUPDIR': '/dockerstartup', 'GAZEBO_MASTER_URI': 'http://localhost:11345', 'ROS_PYTHON_VERSION': '3', 'PS1': 'default:\\w$', 'START_PULSEAUDIO': '1', 'DBUS_SESSION_BUS_ADDRESS': 'unix:abstract=/tmp/dbus-irKyGRyzsC,guid=fb87b2815b829db16a49f99464371757', 'COLORTERM': 'truecolor', 'VNC_COL_DEPTH': '24', 'COLCON_PREFIX_PATH': '/home/kasm-user/Desktop/source/install:/opt/ros/lcas_addons/install', 'MAX_FRAME_RATE': '24', 'ROS_DISTRO': 'humble', 'WINDOWID': '39845891', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'NVIDIA_DRIVER_CAPABILITIES': 'graphics,compat32,utility', 'VNCOPTIONS': '-PreferBandwidth -DynamicQualityMin=4 -DynamicQualityMax=7 -DLP_ClipDelay=0 -select-de manual', 'TERM': 'xterm-256color', 'GAZEBO_MODEL_PATH': '/usr/share/gazebo/../../share/gazebo-11/models:/usr/share/gazebo/../../share/gazebo-11/models:/opt/ros/lcas_addons/install/uol_turtlebot_simulator/share/uol_turtlebot_simulator/models', 'ROS_LOCALHOST_ONLY': '0', 'OGRE_RESOURCE_PATH': '/usr/lib/x86_64-linux-gnu/OGRE-1.9.0', 'PATH': '/home/kasm-user/.local/bin:/home/kasm-user/.local/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'SESSION_MANAGER': 'local/ee2139ac9fa7:@/tmp/.ICE-unix/139,unix/ee2139ac9fa7:/tmp/.ICE-unix/139', 'PULSE_RUNTIME_PATH': '/var/run/pulse', 'XDG_MENU_PREFIX': 'xfce-', 'SDL_GAMECONTROLLERCONFIG': '030000005e040000be02000014010000,XInput Controller,platform:Linux,a:b0,b:b1,x:b2,y:b3,back:b8,guide:b16,start:b9,leftstick:b10,rightstick:b11,leftshoulder:b4,rightshoulder:b5,dpup:b12,dpdown:b13,dpleft:b14,dpright:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b6,righttrigger:b7', 'START_XFCE4': '1', 'DISPLAY': ':1.0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'XFCE', 'SSH_AUTH_SOCK': '/tmp/ssh-XXXXXXK2zkf0/agent.285', 'AMENT_PREFIX_PATH': '/home/kasm-user/Desktop/source/install/testing:/opt/ros/lcas_addons/install/uol_turtlebot_simulator:/opt/ros/lcas_addons/install/cmp3103m_ros2_code_fragments:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'SHELL': '/bin/bash', 'INST_SCRIPTS': '/dockerstartup/install', 'GAZEBO_RESOURCE_PATH': '/usr/share/gazebo/../../share/gazebo-11:/usr/share/gazebo/../../share/gazebo-11:/opt/ros/lcas_addons/install/uol_turtlebot_simulator/share/uol_turtlebot_simulator/worlds:/opt/ros/lcas_addons/install/uol_turtlebot_simulator/share/uol_turtlebot_simulator/models', 'GAZEBO_MODEL_DATABASE_URI': 'http://models.gazebosim.org', 'PWD': '/home/kasm-user/Desktop/source/testing/build/testing', 'VNC_RESOLUTION': '1280x1024', 'TURTLEBOT3_MODEL': 'waffle', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg', 'GAZEBO_PLUGIN_PATH': '/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:', 'XDG_DATA_DIRS': '/usr/local/share:/usr/share', 'PYTHONPATH': '/home/kasm-user/Desktop/source/testing/build/testing/prefix_override:/home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages:/home/kasm-user/Desktop/source/install/testing/lib/python3.10/site-packages:/opt/ros/lcas_addons/install/cmp3103m_ros2_code_fragments/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'AUDIO_PORT': '4901', 'COLCON': '1', 'VTE_VERSION': '6800', 'CMAKE_PREFIX_PATH': '/opt/ros/lcas_addons/install/uol_turtlebot_simulator', 'KASMVNC_AUTO_RECOVER': 'true', 'KASM_VNC_PATH': '/usr/share/kasmvnc', 'VNC_PORT': '5901'}, 'shell': False}
+[0.802278] (-) TimerEvent: {}
+[0.902716] (-) TimerEvent: {}
+[1.003150] (-) TimerEvent: {}
+[1.041532] (testing) StdoutLine: {'line': b'running egg_info\n'}
+[1.042240] (testing) StdoutLine: {'line': b'creating build/testing/testing.egg-info\n'}
+[1.042589] (testing) StdoutLine: {'line': b'writing build/testing/testing.egg-info/PKG-INFO\n'}
+[1.042881] (testing) StdoutLine: {'line': b'writing dependency_links to build/testing/testing.egg-info/dependency_links.txt\n'}
+[1.043042] (testing) StdoutLine: {'line': b'writing entry points to build/testing/testing.egg-info/entry_points.txt\n'}
+[1.043496] (testing) StdoutLine: {'line': b'writing requirements to build/testing/testing.egg-info/requires.txt\n'}
+[1.043720] (testing) StdoutLine: {'line': b'writing top-level names to build/testing/testing.egg-info/top_level.txt\n'}
+[1.044117] (testing) StdoutLine: {'line': b"writing manifest file 'build/testing/testing.egg-info/SOURCES.txt'\n"}
+[1.045544] (testing) StdoutLine: {'line': b"reading manifest file 'build/testing/testing.egg-info/SOURCES.txt'\n"}
+[1.046540] (testing) StdoutLine: {'line': b"writing manifest file 'build/testing/testing.egg-info/SOURCES.txt'\n"}
+[1.046810] (testing) StdoutLine: {'line': b'running build\n'}
+[1.046916] (testing) StdoutLine: {'line': b'running build_py\n'}
+[1.047002] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/build/testing/build\n'}
+[1.047195] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/build/testing/build/lib\n'}
+[1.047569] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/build/testing/build/lib/testing\n'}
+[1.047678] (testing) StdoutLine: {'line': b'copying testing/test.py -> /home/kasm-user/Desktop/source/testing/build/testing/build/lib/testing\n'}
+[1.048075] (testing) StdoutLine: {'line': b'copying testing/__init__.py -> /home/kasm-user/Desktop/source/testing/build/testing/build/lib/testing\n'}
+[1.048348] (testing) StdoutLine: {'line': b'running install\n'}
+[1.048475] (testing) StderrLine: {'line': b'/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.\n'}
+[1.048590] (testing) StderrLine: {'line': b'  warnings.warn(\n'}
+[1.048878] (testing) StdoutLine: {'line': b'running install_lib\n'}
+[1.049667] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages/testing\n'}
+[1.050052] (testing) StdoutLine: {'line': b'copying /home/kasm-user/Desktop/source/testing/build/testing/build/lib/testing/test.py -> /home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages/testing\n'}
+[1.050293] (testing) StdoutLine: {'line': b'copying /home/kasm-user/Desktop/source/testing/build/testing/build/lib/testing/__init__.py -> /home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages/testing\n'}
+[1.050919] (testing) StdoutLine: {'line': b'byte-compiling /home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages/testing/test.py to test.cpython-310.pyc\n'}
+[1.051736] (testing) StdoutLine: {'line': b'byte-compiling /home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages/testing/__init__.py to __init__.cpython-310.pyc\n'}
+[1.051907] (testing) StdoutLine: {'line': b'running install_data\n'}
+[1.052629] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/install/testing/share/ament_index\n'}
+[1.052806] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/install/testing/share/ament_index/resource_index\n'}
+[1.052971] (testing) StdoutLine: {'line': b'creating /home/kasm-user/Desktop/source/testing/install/testing/share/ament_index/resource_index/packages\n'}
+[1.053238] (testing) StdoutLine: {'line': b'copying resource/testing -> /home/kasm-user/Desktop/source/testing/install/testing/share/ament_index/resource_index/packages\n'}
+[1.053451] (testing) StdoutLine: {'line': b'copying package.xml -> /home/kasm-user/Desktop/source/testing/install/testing/share/testing\n'}
+[1.053762] (testing) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.055953] (testing) StdoutLine: {'line': b'Copying build/testing/testing.egg-info to /home/kasm-user/Desktop/source/testing/install/testing/lib/python3.10/site-packages/testing-0.0.0-py3.10.egg-info\n'}
+[1.057580] (testing) StdoutLine: {'line': b'running install_scripts\n'}
+[1.082286] (testing) StdoutLine: {'line': b'Installing moving script to /home/kasm-user/Desktop/source/testing/install/testing/lib/testing\n'}
+[1.082913] (testing) StdoutLine: {'line': b"writing list of installed files to '/home/kasm-user/Desktop/source/testing/build/testing/install.log'\n"}
+[1.103318] (-) TimerEvent: {}
+[1.115293] (testing) CommandEnded: {'returncode': 0}
+[1.133503] (testing) JobEnded: {'identifier': 'testing', 'rc': 0}
+[1.135438] (-) EventReactorShutdown: {}
