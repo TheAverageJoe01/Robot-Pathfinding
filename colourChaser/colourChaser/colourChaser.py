@@ -29,21 +29,19 @@ class ColourChaser(Node):
         self.turnVel = 0.0
         self.searching = False
 
-        """
-        Creating a dictionary to store where the colours are located or not 
-        Will be set to True if the colour is found, False if not
-        """
+        #Creating a dictionary to store where the colours are located or not 
+        #Will be set to True if the colour is found, False if not
         self.colourSearch = {"Yellow": False, "Blue": False, "Green": False, "Red": False}
 
-        """
-        Creating a  another dictionary to store information about where the robot is close to colour for it to be found
-        """
+        
+        #Creating a  another dictionary to store information about where the robot is close to colour for it to be found
+        
 
         self.colourClose = {"Yellow": False, "Blue": False, "Green": False, "Red": False}
 
-        """
-        Setting up the publisher and subscriber
-        """
+       
+        #Setting up the publisher and subscriber
+        
         # publish cmd_vel topic to move the robot
         self.pub_vel = self.create_publisher(Twist, 'colour_vel', 10)
 
@@ -70,7 +68,7 @@ class ColourChaser(Node):
             #if the colour is found within a certain distance, set the variable to True
             if self.colourClose[i] == True and colourDistance < 1.0:
                 self.colourSearch[i] = True
-                print(f"found the colour {i}")
+                print(f"The colour {i} has been found")
                 print(self.colourSearch)
             
 
@@ -103,12 +101,22 @@ class ColourChaser(Node):
         contoursRed, hierarchy = cv2.findContours(current_frame_maskRed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         contoursRed2, hierarchy = cv2.findContours(current_frame_maskRed2, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-        # Add together all colour contours
-        contours = contoursYellow + contoursGreen + contoursBlue + contoursRed + contoursRed2
-        
 
+        # create a dictionary to match the contours to the colours
+        colourMatch = {"Yellow": [contoursYellow], "Blue": [contoursBlue], "Green": [contoursGreen], "Red": [contoursRed, contoursRed2]}
+
+
+        contours = []
+        for colour in self.colourSearch:
+            if self.colourSearch[colour] == False:
+                for col in colourMatch[colour]:
+                    contours += col
+        contoursYellow + contoursGreen + contoursBlue + contoursRed + contoursRed2
+        
         # Sort by area (keep only the biggest one)
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:1]
+
+        contoursYellow = sorted(contoursYellow, key=cv2.contourArea, reverse=True)[:1]
 
         # Draw contour(s) (image to draw on, contours, contour number -1 to draw all contours, colour, thickness):
         current_frame_contours = cv2.drawContours(current_frame, contours, 0, (0, 255, 0), 20)
@@ -116,7 +124,8 @@ class ColourChaser(Node):
         if len(contours) > 0:
             if (len(contours[0]) > 10): # if largest contour is larger than 200  
                 # find the centre of the contour: https://docs.opencv.org/3.4/d8/d23/classcv_1_1Moments.html
-                M = cv2.moments(contours[0]) # only select the largest controur
+                M = cv2.moments(contours[0]) # only select the largest contour
+
                 if M['m00'] > 0:
                     # find the centroid of the contour
                     cx = int(M['m10']/M['m00'])
@@ -141,18 +150,12 @@ class ColourChaser(Node):
                         #print("object in the center of image")
                         self.turnVel = 0.0
 
-
-                        #factoring in yellow objects
-                        if len(contoursYellow) > 0:
-                            yellowM = cv2.moments(contoursYellow[0])
-
-                            yellowCenterX = int(yellowM['m10']/yellowM['m00'])
-                            yellowCenterY = int(yellowM['m01']/yellowM['m00'])
-
-
-                            if yellowCenterX == cx and yellowCenterY == cy:
-                                print("Yellow has been found")
-                                self.colourClose["Yellow"] = True
+                        
+                        self.colourSeen("Yellow", contoursYellow, cx, cy)
+                        self.colourSeen("Blue", contoursBlue, cx, cy)
+                        self.colourSeen("Green", contoursGreen, cx, cy)
+                        self.colourSeen("Red", contoursRed, cx, cy)
+                        self.colourSeen("Red", contoursRed2, cx, cy)
                                 
             else:
                 #print("No Centroid Large Enough Found")
@@ -171,6 +174,7 @@ class ColourChaser(Node):
         cv2.imshow("Image window", current_frame_contours_small)
         cv2.waitKey(1)
 
+
     def timer_callback(self):
         #print('entered timer_callback')
 
@@ -181,6 +185,18 @@ class ColourChaser(Node):
         if(self.searching == True):
             self.tw.linear.x = 0.25
             self.pub_vel.publish(self.tw)
+
+    def colourSeen(self, colour, contour, cx, cy):
+        if len(contour) > 0:
+            if (len(contour[0]) > 10):
+                M2 = cv2.moments(contour[0])
+
+                contour_cx = int(M2['m10']/M2['m00'])
+                contour_cy = int(M2['m01']/M2['m00'])
+
+                if contour_cx == cx and contour_cy == cy:
+                    print(f"{colour} Has been seen")
+                    self.colourClose[colour] = True
 
         
 
@@ -201,5 +217,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
-

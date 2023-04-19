@@ -22,54 +22,64 @@ class collisionAvoidance(Node):
         # Create a publisher for the twist message
         self.twist_pub = self.create_publisher(Twist, 'collision_vel', 10)
         # Create a subscriber for the laser scan message
-        self.laser_sub = self.create_subscription(LaserScan, 'laser_scan', self.collisionCallback, 10)
+        self.laser_sub = self.create_subscription(LaserScan, '/scan', self.collisionCallback, 10)
 
     def collisionCallback(self, msg):
-        """
-        This callback is called for every LaserScan received. 
-        If it detects obstacles within the segment of the LaserScan it turns, 
-        if the space is clear, it moves forward.
-        """
-        collisionDetected = False 
+
+        # initialize the collisionDetected variable to False
+        collisionDetected = False
+
+        # create a new instance of the Twist() class to set the robot's velocity
         robotMove = Twist()
 
-        forwardView = msg.ranges[0] > 0.8
-        #Check the range values at indices 1 to 60 and -1 to -60
+        # check if the range value at the front of the robot is greater than 0.8
+        forwardView = msg.ranges[0] > 0.7
+        
+        # check range values from the front of the robot to 60 degrees to the left and right
         for empty in range(60):
-            # If all the range values are greater than 0.8, set forwardView to True
-            forwardView = forwardView and msg.ranges[empty] > 0.8
-            forwardView = forwardView and msg.ranges[-empty] > 0.8
+            # If all the range values are greater than 0.7, set forwardView to True
+            forwardView = forwardView and msg.ranges[empty] > 0.7
+            forwardView = forwardView and msg.ranges[-empty] > 0.7
 
-        for rot in range(0, len(msg.ranges), 30):
+        # check range values at different angular rotations
+        for angularRotation in range(0, len(msg.ranges), 30):
 
-            if (msg.ranges[rot] < 0.8 and forwardView):
-                #print out message to show that the front of the robot is clear
-                print(f"Seems to be clear in front")
+            # if an obstacle is detected in front and the front view is clear, move forward
+            if (msg.ranges[angularRotation] < 0.7 and forwardView):
+                # print out message to show that the front of the robot is clear
+                print(f"in front of the robot is clear")
+                # set the robot's velocity to move forward
                 robotMove.linear.x = 0.25
                 robotMove.angular.z = 0.0
-                collisionDetected = True
 
+                collisionDetected = False
 
-            elif (msg.ranges[rot] < 0.8 or forwardView == False):
-                #print out message to show that the front of the robot is not clear
-                print(f"Collision detected at {rot}")
-                #stops the robot
+            # if an obstacle is detected and the front view is not clear, stop and turn the robot
+            elif (msg.ranges[angularRotation] < 0.7 or forwardView == False):
+                # print out message to show that the front of the robot is not clear
+                print(f"Collision detected at {angularRotation}")
+                # set the robot's velocity to stop
                 robotMove.linear.x = 0.0
+                # set collisionDetected to True to indicate an obstacle is detected
                 collisionDetected = True
 
                 # decides which side of the robot is clear and turns the robot to the right or left
-                if rot >= 180:
+                # use more precise condition for angular rotation
+                if 180 <= angularRotation <= 400: 
+                    # turn the robot to the right
+                    robotMove.angular.z = 0.3
+                elif 0 <= angularRotation <= 180: 
+                    # turn the robot to the left
                     robotMove.angular.z = -0.3
                 else:
-                    robotMove.angular.z = 0.3
+                    # use a default turn direction if angular rotation value is outside expected range
+                    robotMove.angular.z = -0.3
+
+
 
         # output message 
         if collisionDetected == True:
             self.twist_pub.publish(robotMove)
-
- 
-
-
 
 def main(args=None):
     print('Starting collision.py.')

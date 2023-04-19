@@ -8,7 +8,7 @@
 twist_mux:
   ros__parameters:
     topics:
-        collision:
+      collision:
         topic: collision_vel
         timeout : 0.5
         priority: 11

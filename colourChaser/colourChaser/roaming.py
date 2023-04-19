@@ -23,9 +23,9 @@ class roam(Node):
     A simple Roaming ROS2 node. Subscribes to "/scan" and sends velocity commands to "roaming_vel".
     """
 
-    min_distance = 0.3  # stay at least 30cm away from obstacles
-    turn_speed = 0.2    # rad/s, turning speed in case of obstacle
-    forward_speed = 0.2 # m/s, speed with which to go forward if the space is clear
+    min_distance = 0.2 # stay at least 30cm away from obstacles
+    turn_speed = 0.3    # rad/s, turning speed in case of obstacle
+    forward_speed = 0.3 # m/s, speed with which to go forward if the space is clear
     scan_segment = 60   # degrees, the size of the left and right laser segment to search for obstacles
 
     def __init__(self):
@@ -70,7 +70,7 @@ class roam(Node):
         self.twist_pub.publish(twist)        
 
 def main(args=None):
-    print('Starting.')
+    print('Starting roaming.py.')
 
     try:
         # Initialise the ROS Python subsystem
