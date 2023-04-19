@@ -8,6 +8,10 @@
 twist_mux:
   ros__parameters:
     topics:
+        collision:
+        topic: collision_vel
+        timeout : 0.5
+        priority: 11
       colour:
         topic   : colour_vel
         timeout : 0.5
@@ -15,4 +19,4 @@ twist_mux:
       roam:
         topic: roaming_vel
         timeout : 0.5
-        priority: 8
+        priority: 5

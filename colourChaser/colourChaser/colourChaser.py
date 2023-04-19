@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+#twist mux is used to help with ros topics for requires downloading to root on every launch 
+# download guide below 
+# sudo apt update
+# sudo apt install ros-humble-twist-mux
+
+# This code was adapted from the github page 
+#https://github.com/LCAS/teaching/tree/lcas_humble/cmp3103m_ros2_code_fragments
+
 # An example of TurtleBot 3 subscribe to camera topic, mask colours, find and display contours, and move robot to center the object in image frame
 # Written for humble
 # cv2 image types - http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython
@@ -12,13 +20,30 @@ from geometry_msgs.msg import Twist
 from cv_bridge import CvBridge # Package to convert between ROS and OpenCV Images
 import cv2
 import numpy as np
+from sensor_msgs.msg import LaserScan
 
 class ColourChaser(Node):
     def __init__(self):
         super().__init__('colourChaser')
         
-        self.turn_vel = 0.0
+        self.turnVel = 0.0
+        self.searching = False
 
+        """
+        Creating a dictionary to store where the colours are located or not 
+        Will be set to True if the colour is found, False if not
+        """
+        self.colourSearch = {"Yellow": False, "Blue": False, "Green": False, "Red": False}
+
+        """
+        Creating a  another dictionary to store information about where the robot is close to colour for it to be found
+        """
+
+        self.colourClose = {"Yellow": False, "Blue": False, "Green": False, "Red": False}
+
+        """
+        Setting up the publisher and subscriber
+        """
         # publish cmd_vel topic to move the robot
         self.pub_vel = self.create_publisher(Twist, 'colour_vel', 10)
 
@@ -27,13 +52,34 @@ class ColourChaser(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
         # subscribe to the camera topic
-        self.create_subscription(Image, '/camera/image_raw', self.camera_callback, 10)
+        self.create_subscription(Image, '/camera/image_raw', self.cameraCallback, 10)
+
+        # subscribe to the laser topic 
+        self.laser_sub = self.create_subscription(LaserScan,"/scan",self.colourSearchCallback, 1)
 
         # Used to convert between ROS and OpenCV images
         self.br = CvBridge()
 
-    def camera_callback(self, data):
-        #self.get_logger().info("camera_callback")
+
+    # a callback function for the colour searching 
+    def colourSearchCallback(self, msg):
+        #creating a variable to store the distance between the robot and the coloured object
+        colourDistance = msg.ranges[0]
+
+        for i in self.colourSearch:
+            #if the colour is found within a certain distance, set the variable to True
+            if self.colourClose[i] == True and colourDistance < 1.0:
+                self.colourSearch[i] = True
+                print(f"found the colour {i}")
+                print(self.colourSearch)
+            
+
+    def cameraCallback(self, data):
+
+        for i in self.colourClose:
+            self.colourClose[i] = False
+
+        #self.get_logger().info("cameraCallback")
 
         cv2.namedWindow("Image window", 1)
 
@@ -82,25 +128,43 @@ class ColourChaser(Node):
                     cv2.circle(current_frame, (round(cx), round(cy)), 50, (0, 255, 0), -1)
                                 
                     # find height/width of robot camera image from ros2 topic echo /camera/image_raw height: 1080 width: 1920
+                    
+                    self.searching = True
 
                     # if center of object is to the left of image center move left
                     if cx < 900:
-                        self.turn_vel = 0.3
+                        self.turnVel = 0.3
                     # else if center of object is to the right of image center move right
                     elif cx >= 1200:
-                        self.turn_vel = -0.3
+                        self.turnVel = -0.3
                     else: # center of object is in a 100 px range in the center of the image so dont turn
                         #print("object in the center of image")
-                        self.turn_vel = 0.0
+                        self.turnVel = 0.0
+
+
+                        #factoring in yellow objects
+                        if len(contoursYellow) > 0:
+                            yellowM = cv2.moments(contoursYellow[0])
+
+                            yellowCenterX = int(yellowM['m10']/yellowM['m00'])
+                            yellowCenterY = int(yellowM['m01']/yellowM['m00'])
+
+
+                            if yellowCenterX == cx and yellowCenterY == cy:
+                                print("Yellow has been found")
+                                self.colourClose["Yellow"] = True
+                                
             else:
-                print("No Centroid Large Enougth Found")
+                #print("No Centroid Large Enough Found")
                 # turn until we can see a coloured object
-                self.turn_vel = 0.3
+                self.turnVel = 0.0
+                self.searching = False
                         
         else:
-            print("No Centroid Found")
+            #print("No Centroid Found")
             # turn until we can see a coloured object
-            self.turn_vel = 0.3
+            self.turnVel = 0.0
+            self.searching = False
 
         # show the cv images
         current_frame_contours_small = cv2.resize(current_frame_contours, (0,0), fx=0.4, fy=0.4) # reduce image size
@@ -112,11 +176,13 @@ class ColourChaser(Node):
 
         self.tw=Twist() # twist message to publish
 
-        self.tw.angular.z = self.turn_vel
+        self.tw.angular.z = self.turnVel
 
-        self.tw.linear.x = 0.25 # Changed to move robot forwards
+        if(self.searching == True):
+            self.tw.linear.x = 0.25
+            self.pub_vel.publish(self.tw)
 
-        self.pub_vel.publish(self.tw)
+        
 
 def main(args=None):
     print('Starting colourChaser.py.')
@@ -137,15 +203,3 @@ if __name__ == '__main__':
     main()
 
 
-
-
-## sudo apt update
-## install it 
-      # sudo apt install ros-humble-twist-mux
-## move launch and config folder over
-# Add path into the data files
-# in launch change twist_mux/cmd_vel to /cmd_vel
-
-
-
-# Change stuff in yaml files

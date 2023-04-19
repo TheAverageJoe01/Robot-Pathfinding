@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+
+
+#twist mux is used to help with ros topics for requires downloading to root on every launch 
+# download guide below 
+# sudo apt update
+# sudo apt install ros-humble-twist-mux
+
+# This code was adapted from the github page 
+#https://github.com/LCAS/teaching/tree/lcas_humble/cmp3103m_ros2_code_fragments
+
+
 import rclpy
 
 from rclpy.node import Node
@@ -8,7 +20,7 @@ import math
 
 class roam(Node):
     """
-    A simple Roaming ROS2 node. Subscribes to "/scan" and sends velocity commands to "/cmd_vel".
+    A simple Roaming ROS2 node. Subscribes to "/scan" and sends velocity commands to "roaming_vel".
     """
 
     min_distance = 0.3  # stay at least 30cm away from obstacles

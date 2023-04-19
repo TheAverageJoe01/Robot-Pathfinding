@@ -29,6 +29,7 @@ setup(
         'console_scripts': [
                 'chaser = colourChaser.colourChaser:main',
                 'roamer = colourChaser.roaming:main',
+                'collision = colourChaser.collision:main',
         ],
     },
 )
