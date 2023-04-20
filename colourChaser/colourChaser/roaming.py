@@ -23,9 +23,9 @@ class roam(Node):
     A simple Roaming ROS2 node. Subscribes to "/scan" and sends velocity commands to "roaming_vel".
     """
 
-    min_distance = 0.2 # stay at least 30cm away from obstacles
+    min_distance = 0.1 # stay at least 30cm away from obstacles
     turn_speed = 0.3    # rad/s, turning speed in case of obstacle
-    forward_speed = 0.3 # m/s, speed with which to go forward if the space is clear
+    forward_speed = 0.25 # m/s, speed with which to go forward if the space is clear
     scan_segment = 60   # degrees, the size of the left and right laser segment to search for obstacles
 
     def __init__(self):
@@ -37,37 +37,57 @@ class roam(Node):
         self.twist_pub = self.create_publisher(Twist,'roaming_vel', 1)
 
     def min_range(self, range):
-        """
-        returns the smallest value in the range array.
-        """
-        # initialise as positive infinity
+        # initialise a variable to hold the smallest value found so far as positive infinity.
         min_range = math.inf
+
+        # iterate over each element of the array.
         for v in range:
+
+            # check if the current value is less than the smallest value found so far.
             if v < min_range:
+
+                # if it is, update the smallest value found so far to be the current value.
                 min_range = v
+
+        # return the smallest value found in the array.
         return min_range
 
     def callback(self, data):
         """
-        This callback is called for every LaserScan received. 
-        If it detects obstacles within the segment of the LaserScan it turns, 
-        if the space is clear, it moves forward.
+        This function is a callback that gets called for every LaserScan received. 
+        It checks if there are any obstacles within the specified segment of the LaserScan data. 
+        If an obstacle is detected, it turns the robot accordingly. If the path is clear, it moves forward.
         """
 
-        # first, identify the nearest obstacle in the right 45 degree segment of the laser scanner
+        # First, identify the nearest obstacle in the right and left 45-degree segments of the laser scanner.
+        # To achieve this, the function calls the 'min_range' function defined elsewhere, which returns the minimum value
+        # of an array of ranges. The 'data.ranges' array contains the ranges (distances) of obstacles detected by the 
+        # laser scanner. The [:self.scan_segment] and [-self.scan_segment:] syntax is used to slice the ranges array 
+        # and only look at the ranges within the specified segments.
         min_range_right = self.min_range(data.ranges[:self.scan_segment])
         min_range_left = self.min_range(data.ranges[-self.scan_segment:])
+
+        # Next, initialise a Twist object to hold the linear and angular velocities of the robot.
         twist = Twist()
+
+        # If an obstacle is detected within the right segment of the laser scanner, turn left.
         if min_range_right < self.min_distance:
             self.get_logger().info('turning left')
             twist.angular.z = -self.turn_speed
+
+        # If an obstacle is detected within the left segment of the laser scanner, turn right.
         elif min_range_left < self.min_distance:
             self.get_logger().info('turning right')
             twist.angular.z = self.turn_speed
+
+        # MAIN USE OF THIS SCRIPT 
+        # If no obstacles are detected within the specified segments, move forward.
         else:
             self.get_logger().info('going straight')
             twist.linear.x = self.forward_speed
-        self.twist_pub.publish(twist)        
+
+        # Finally, publish the Twist message to the robot's topic so that it can execute the desired motion.
+        self.twist_pub.publish(twist)  
 
 def main(args=None):
     print('Starting roaming.py.')

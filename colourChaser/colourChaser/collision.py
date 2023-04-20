@@ -26,36 +26,37 @@ class collisionAvoidance(Node):
 
     def collisionCallback(self, msg):
 
-        # initialize the collisionDetected variable to False
-        collisionDetected = False
 
         # create a new instance of the Twist() class to set the robot's velocity
         robotMove = Twist()
 
+        # initialize the collisionDetected variable to False
+        collisionDetected = False
+
         # check if the range value at the front of the robot is greater than 0.8
-        forwardView = msg.ranges[0] > 0.7
+        forwardView = msg.ranges[0] > 0.6
         
         # check range values from the front of the robot to 60 degrees to the left and right
         for empty in range(60):
-            # If all the range values are greater than 0.7, set forwardView to True
-            forwardView = forwardView and msg.ranges[empty] > 0.7
-            forwardView = forwardView and msg.ranges[-empty] > 0.7
+            # If all the range values are greater than 0.8, set forwardView to True
+            forwardView = forwardView and msg.ranges[empty] > 0.8
+            forwardView = forwardView and msg.ranges[-empty] > 0.8
 
         # check range values at different angular rotations
         for angularRotation in range(0, len(msg.ranges), 30):
 
             # if an obstacle is detected in front and the front view is clear, move forward
-            if (msg.ranges[angularRotation] < 0.7 and forwardView):
+            if (msg.ranges[angularRotation] < 0.8 and forwardView):
                 # print out message to show that the front of the robot is clear
                 print(f"in front of the robot is clear")
                 # set the robot's velocity to move forward
-                robotMove.linear.x = 0.25
+                robotMove.linear.x = 0.3
                 robotMove.angular.z = 0.0
 
                 collisionDetected = False
 
             # if an obstacle is detected and the front view is not clear, stop and turn the robot
-            elif (msg.ranges[angularRotation] < 0.7 or forwardView == False):
+            elif (msg.ranges[angularRotation] < 0.8 or forwardView == False):
                 # print out message to show that the front of the robot is not clear
                 print(f"Collision detected at {angularRotation}")
                 # set the robot's velocity to stop
@@ -65,15 +66,15 @@ class collisionAvoidance(Node):
 
                 # decides which side of the robot is clear and turns the robot to the right or left
                 # use more precise condition for angular rotation
-                if 180 <= angularRotation <= 400: 
+                if 180 <= angularRotation and angularRotation <= 400: 
                     # turn the robot to the right
-                    robotMove.angular.z = 0.3
-                elif 0 <= angularRotation <= 180: 
+                    robotMove.angular.z = 0.5
+                elif 0 <= angularRotation and angularRotation <= 180: 
                     # turn the robot to the left
-                    robotMove.angular.z = -0.3
+                    robotMove.angular.z = -0.5
                 else:
                     # use a default turn direction if angular rotation value is outside expected range
-                    robotMove.angular.z = -0.3
+                    robotMove.angular.z = -0.5
 
 
 

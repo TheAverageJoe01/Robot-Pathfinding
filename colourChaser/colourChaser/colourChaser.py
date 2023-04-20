@@ -33,13 +33,9 @@ class ColourChaser(Node):
         #Will be set to True if the colour is found, False if not
         self.colourSearch = {"Yellow": False, "Blue": False, "Green": False, "Red": False}
 
-        
         #Creating a  another dictionary to store information about where the robot is close to colour for it to be found
-        
-
         self.colourClose = {"Yellow": False, "Blue": False, "Green": False, "Red": False}
 
-       
         #Setting up the publisher and subscriber
         
         # publish cmd_vel topic to move the robot
@@ -106,11 +102,22 @@ class ColourChaser(Node):
         colourMatch = {"Yellow": [contoursYellow], "Blue": [contoursBlue], "Green": [contoursGreen], "Red": [contoursRed, contoursRed2]}
 
 
+        # Initialize an empty list to store the contours
         contours = []
-        for colour in self.colourSearch:
-            if self.colourSearch[colour] == False:
-                for col in colourMatch[colour]:
-                    contours += col
+
+        # Loop through each colour in the colourSearch dictionary
+        for i in self.colourSearch:
+            
+            # Check if the colour has not been seen yet
+            if self.colourSearch[i] == False:
+                
+                # Loop through each matching colour in the colourMatch dictionary
+                for j in colourMatch[i]:
+                    
+                    # Add the contours for the matching colour to the list of contours
+                    contours += j
+
+        # Concatenate the contours for each colour into a single list
         contoursYellow + contoursGreen + contoursBlue + contoursRed + contoursRed2
         
         # Sort by area (keep only the biggest one)
@@ -133,7 +140,7 @@ class ColourChaser(Node):
                     #print("Centroid of the biggest area: ({}, {})".format(cx, cy))
 
                     # Draw a circle centered at centroid coordinates
-                    # cv2.circle(image, center_coordinates, radius, color, thickness) -1 px will fill the circle
+                    # cv2.circle(image, center_coordinates, radius, colour, thickness) -1 px will fill the circle
                     cv2.circle(current_frame, (round(cx), round(cy)), 50, (0, 255, 0), -1)
                                 
                     # find height/width of robot camera image from ros2 topic echo /camera/image_raw height: 1080 width: 1920
@@ -150,7 +157,9 @@ class ColourChaser(Node):
                         #print("object in the center of image")
                         self.turnVel = 0.0
 
-                        
+                        # Call the 'colourSeen' method for each colour and contour
+                        # This method checks if the contour is valid and whether it matches the given x and y coordinates
+                        # If the contour matches, the method sets a flag in the 'colourClose' dictionary to indicate that the colour has been seen
                         self.colourSeen("Yellow", contoursYellow, cx, cy)
                         self.colourSeen("Blue", contoursBlue, cx, cy)
                         self.colourSeen("Green", contoursGreen, cx, cy)
@@ -186,16 +195,30 @@ class ColourChaser(Node):
             self.tw.linear.x = 0.25
             self.pub_vel.publish(self.tw)
 
+    # This method takes four arguments: the colour to check, the contour to look for the colour in, 
+    # and the x and y coordinates of the center of the contour.
     def colourSeen(self, colour, contour, cx, cy):
+        
+        # Check if the contour has any points
         if len(contour) > 0:
+            
+            # Check if the contour has enough points to be considered valid (more than 10 in this case)
             if (len(contour[0]) > 10):
+                
+                # Calculate the moments of the contour using OpenCV
                 M2 = cv2.moments(contour[0])
 
+                # Calculate the center of the contour using the moments
                 contour_cx = int(M2['m10']/M2['m00'])
                 contour_cy = int(M2['m01']/M2['m00'])
 
+                # Check if the center of the contour matches the x and y coordinates passed as arguments
                 if contour_cx == cx and contour_cy == cy:
+                    
+                    # If the center of the contour matches the arguments, print a message indicating that the colour has been seen
                     print(f"{colour} Has been seen")
+                    
+                    # Set the value of the colourClose dictionary at the key of the current colour to True
                     self.colourClose[colour] = True
 
         
